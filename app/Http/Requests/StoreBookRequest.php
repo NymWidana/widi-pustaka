@@ -29,8 +29,8 @@ class StoreBookRequest extends FormRequest
             'description' => 'string',
             'categories' => 'array',
             'categories.*' => [
-                'string',
-                'exists:categories,name'
+                'integer',
+                'exists:categories,id'
             ],
             'authors' => [
                 'required',
@@ -49,33 +49,22 @@ class StoreBookRequest extends FormRequest
     protected function prepareForValidation()
     {
         //makes sure intended string data is turned into array
-        //if its neither string or array, it will throw validation error by using validation rules 'array'
-        //if its array of non string value, it will throw validation error by using validation rule to each of the array items 'string'
-
+        //if its not string it will go to the validation rule 'array', if it isn't array it will fail
+        //if its array of non string value, it will not pass the validation rule 'string' of 'author.*'  
         $authors = $this->input('authors');
-        $categories = $this->input('categories');
         if (is_string($authors)) {
             $this->merge([
                 'authors' => [$authors]
             ]);
         }
-        if (is_string($categories)) {
+        
+        //makes sure intended integer data is turned into array
+        //if its not integer it will go to the validation rule 'array', if it isn't array it will fail
+        //if its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
+        $categories = $this->input('categories');
+        if (is_int($categories)) {
             $this->merge([
-                'categories' => [strtolower($categories)]
-            ]);
-        }
-        else if (is_array($categories)){
-            $lowerCasedCategory = [];
-            foreach ($categories as $category) {
-                if(is_string($category)){
-                    $lowerCasedCategory[]= strtolower($category);
-                }
-                else{
-                    $lowerCasedCategory[]= $category;
-                }
-            }
-            $this->merge([
-                'categories' => $lowerCasedCategory
+                'categories' => [$categories]
             ]);
         }
     }
@@ -123,9 +112,9 @@ class StoreBookRequest extends FormRequest
             'title.string' => 'Book title must be a valid string.',
             'title.max' => 'Book title must not exceed 255 characters.',
             'description.string' => 'Book description must be a valid string.',
-            'categories.array' => 'The book categories must be a string or an array',
-            'categories.*.string' => 'Each book categories must be a valid string.',
-            'categories.*.exists' => 'One or more selected book categories do not exist.',
+            'categories.array' => 'The book categories must be an integer or an array',
+            'categories.*.integer' => 'Each book categories must be a integer.',
+            'categories.*.exists' => 'One or more selected book categories do not exists.',
             'authors.required' => 'Book authors is required.'
         ];
     }

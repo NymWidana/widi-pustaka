@@ -50,17 +50,14 @@ class BookController extends Controller
                 "description" => $validatedData['description']
             ]); 
 
-            $categoryIds = [];
-            foreach ($validatedData['categories'] as $categoryName) {
-                $category = Category::where('name', $categoryName)->first();
-                if($category){   
-                    $categoryIds[] = $category->id;
-                }else{
+            foreach ($validatedData['categories'] as $categoryIds) {
+                $categoryExists = Category::where('id', $categoryIds)->exists();
+                if(!$categoryExists){
                     return response()->json([
-                        'code' => 400,
+                        'code' => 404,
                         'success' => False,
-                        'message' => 'Failed saving book data!, the specified book category is not found'
-                    ], 400);
+                        'message' => 'Failed to save book data!, the specified book category is not found'
+                    ], 404);
                 }
             }
             $authorIds = [];
@@ -69,11 +66,12 @@ class BookController extends Controller
                 $authorIds[] = $author->id;
             }
             $book->authors()->sync($authorIds);
-            $book->categories()->sync($categoryIds);
+            $book->categories()->sync($validatedData['categories']);
+
             if($book){
                 return response()->json([
                     'code' => 201,
-                    'data' => $book,
+                    'data' => Book::with(['authors', 'categories'])->find($book->id),
                     'success' => True,
                     'message' => 'Successfully saved a book data!'
                 ], 201);
@@ -148,17 +146,14 @@ class BookController extends Controller
                 "description" => $validatedData['description']
             ]); 
 
-            $categoryIds = [];
-            foreach ($validatedData['categories'] as $categoryName) {
-                $category = Category::where('name', $categoryName)->first();
-                if($category){   
-                    $categoryIds[] = $category->id;
-                }else{
+            foreach ($validatedData['categories'] as $categoryIds) {
+                $categoryExists = Category::where('id', $categoryIds)->exists();
+                if(!$categoryExists){
                     return response()->json([
-                        'code' => 400,
+                        'code' => 404,
                         'success' => False,
                         'message' => 'Failed to update book data!, the specified book category is not found'
-                    ], 400);
+                    ], 404);
                 }
             }
             $authorIds = [];
@@ -167,7 +162,8 @@ class BookController extends Controller
                 $authorIds[] = $author->id;
             }
             $book->authors()->sync($authorIds);
-            $book->categories()->sync($categoryIds);
+            $book->categories()->sync($validatedData['categories']);
+
             if($updated){
                 return response()->json([
                     'code' => 201,
