@@ -102,7 +102,7 @@ class BookController extends Controller
     {
         //
         try{
-            $book = Book::find($id);
+            $book = Book::with(['authors', 'categories'])->find($id);
             if(!$book){
                 return response()->json([
                 'code' => 404,
@@ -199,7 +199,7 @@ class BookController extends Controller
     {
         //
         try{
-            $book = Book::find($id);
+            $book = Book::with(['authors', 'categories'])->find($id);
             if(!$book){
                 return response()->json([
                     'code' => 404,
