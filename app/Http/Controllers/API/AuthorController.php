@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAuthorRequest;
 use App\Http\Requests\UpdateAuthorRequest;
+use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class AuthorController extends Controller
     public function index()
     {
         try{
-            $authors = Author::with('books')->get();
+            $authors = AuthorResource::collection(Author::with('books')->get());
             return response()->json([
                 'code' => 200,
                 'data' => $authors,
@@ -48,9 +49,9 @@ class AuthorController extends Controller
             if($author){
                 return response()->json([
                     'code' => 201,
-                    'data' => $author,
+                    'data' => new AuthorResource(Author::with('books')->find($author->id)),
                     'success' => True,
-                    'message' => 'Successfully saved a author data!'
+                    'message' => 'Successfully saved an author data!'
                 ], 201);
             }
             else{
@@ -76,7 +77,7 @@ class AuthorController extends Controller
     public function show(string $id)
     {
         try{
-            $author = Author::with('books')->find($id);
+            $author = new AuthorResource(Author::with('books')->find($id));
             if(!$author){
                 return response()->json([
                 'code' => 404,
@@ -123,9 +124,9 @@ class AuthorController extends Controller
             if($updated){
                 return response()->json([
                     'code' => 201,
-                    'data' => Author::find($id),
+                    'data' => new AuthorResource(Author::with('books')->find($id)),
                     'success' => True,
-                    'message' => 'Successfully updated a author data!'
+                    'message' => 'Successfully updated an author data!'
                 ], 201);
             }
             else{
@@ -150,7 +151,7 @@ class AuthorController extends Controller
     public function destroy(string $id)
     {
         try{
-            $author = Author::with('books')->find($id);
+            $author = new AuthorResource(Author::with('books')->find($id));
             if(!$author){
                 return response()->json([
                     'code' => 404,
@@ -160,12 +161,12 @@ class AuthorController extends Controller
             }
 
             //check if author still have books attached to it
-            if($author->books->isNotEmpty()){
+            if(count($author->book_ids) > 0){
                 return response()->json([
                     'code' => 409,
                     'data' => $author,
                     'success' => False,
-                    'message' => 'Failed to retrieve the author data. The author still has books attached to it!'
+                    'message' => 'Failed to delete the author data. The author still has books attached to it!'
                 ], 409);
             }
             $deleted = $author->delete();
@@ -174,7 +175,7 @@ class AuthorController extends Controller
                     'code' => 200,
                     'data' => $author,
                     'success' => True,
-                    'message' => 'Successfully deleted a author data!'
+                    'message' => 'Successfully deleted an author data!'
                 ], 200);
             }
             else{

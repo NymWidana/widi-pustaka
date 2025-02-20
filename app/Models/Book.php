@@ -11,6 +11,9 @@ class Book extends Model
     /** @use HasFactory<\Database\Factories\BookFactory> */
     use HasFactory;
 
+    // add properties to be filled by accessors
+    protected $appends = ['author_ids', 'category_ids'];
+
     // defining which database table is connected
     protected $table = 'books';
 
@@ -30,5 +33,16 @@ class Book extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    // Accessors
+    public function getAuthorIdsAttribute()
+    {
+        return $this->authors->pluck('id');
+    }
+
+    public function getCategoryIdsAttribute()
+    {
+        return $this->categories->pluck('id');
     }
 }

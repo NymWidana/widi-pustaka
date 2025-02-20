@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         try{
-            $categories = Category::with('books')->get();
+            $categories = CategoryResource::collection(Category::with('books')->get());
             return response()->json([
                 'code' => 200,
                 'data' => $categories,
@@ -48,7 +49,7 @@ class CategoryController extends Controller
             if($category){
                 return response()->json([
                     'code' => 201,
-                    'data' => $category,
+                    'data' => new CategoryResource(Category::with('books')->find($category->id)),
                     'success' => True,
                     'message' => 'Successfully saved a category data!'
                 ], 201);
@@ -76,7 +77,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         try{
-            $category = Category::with('books')->find($id);
+            $category = new CategoryResource(Category::with('books')->find($id));
             if(!$category){
                 return response()->json([
                 'code' => 404,
@@ -123,7 +124,7 @@ class CategoryController extends Controller
             if($updated){
                 return response()->json([
                     'code' => 201,
-                    'data' => Category::find($id),
+                    'data' => new CategoryResource(Category::with('books')->find($id)),
                     'success' => True,
                     'message' => 'Successfully updated a category data!'
                 ], 201);
@@ -150,7 +151,7 @@ class CategoryController extends Controller
     public function destroy(string $id)
     {
         try{
-            $category = Category::find($id);
+            $category = new CategoryResource(Category::with('books')->find($id));
             if(!$category){
                 return response()->json([
                     'code' => 404,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBookRequest;
 use App\Http\Requests\UpdateBookRequest;
+use App\Http\Resources\BookResource;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Category;
@@ -20,7 +21,7 @@ class BookController extends Controller
     {
         //
         try{
-            $books = Book::with(['authors', 'categories'])->get();
+            $books = BookResource::collection(Book::with(['authors', 'categories'])->get());
             return response()->json([
                 'code' => 200,
                 'data' => $books,
@@ -71,7 +72,7 @@ class BookController extends Controller
             if($book){
                 return response()->json([
                     'code' => 201,
-                    'data' => Book::with(['authors', 'categories'])->find($book->id),
+                    'data' => new BookResource(Book::with(['authors', 'categories'])->find($book->id)),
                     'success' => True,
                     'message' => 'Successfully saved a book data!'
                 ], 201);
@@ -100,7 +101,7 @@ class BookController extends Controller
     {
         //
         try{
-            $book = Book::with(['authors', 'categories'])->find($id);
+            $book = new BookResource(Book::with(['authors', 'categories'])->find($id));
             if(!$book){
                 return response()->json([
                 'code' => 404,
@@ -167,7 +168,7 @@ class BookController extends Controller
             if($updated){
                 return response()->json([
                     'code' => 201,
-                    'data' => Book::with(['authors', 'categories'])->find($id),
+                    'data' => new BookResource(Book::with(['authors', 'categories'])->find($id)),
                     'success' => True,
                     'message' => 'Successfully updated a book data!'
                 ], 201);
@@ -195,7 +196,7 @@ class BookController extends Controller
     {
         //
         try{
-            $book = Book::with(['authors', 'categories'])->find($id);
+            $book = new BookResource(Book::with(['authors', 'categories'])->find($id));
             if(!$book){
                 return response()->json([
                     'code' => 404,
