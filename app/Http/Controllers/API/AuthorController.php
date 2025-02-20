@@ -17,7 +17,7 @@ class AuthorController extends Controller
     public function index()
     {
         try{
-            $authors = Author::all();
+            $authors = Author::with('books')->get();
             return response()->json([
                 'code' => 200,
                 'data' => $authors,
@@ -76,7 +76,7 @@ class AuthorController extends Controller
     public function show(string $id)
     {
         try{
-            $author = Author::find($id);
+            $author = Author::with('books')->find($id);
             if(!$author){
                 return response()->json([
                 'code' => 404,
@@ -150,13 +150,23 @@ class AuthorController extends Controller
     public function destroy(string $id)
     {
         try{
-            $author = Author::find($id);
+            $author = Author::with('books')->find($id);
             if(!$author){
                 return response()->json([
                     'code' => 404,
                     'success' => False,
                     'message' => 'Failed to retrieve the author data. The author data is not found!'
                 ], 404);
+            }
+
+            //check if author still have books attached to it
+            if($author->books->isNotEmpty()){
+                return response()->json([
+                    'code' => 409,
+                    'data' => $author,
+                    'success' => False,
+                    'message' => 'Failed to retrieve the author data. The author still has books attached to it!'
+                ], 409);
             }
             $deleted = $author->delete();
             if($deleted){

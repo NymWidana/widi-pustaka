@@ -17,7 +17,7 @@ class CategoryController extends Controller
     public function index()
     {
         try{
-            $categories = Category::all();
+            $categories = Category::with('books')->get();
             return response()->json([
                 'code' => 200,
                 'data' => $categories,
@@ -76,7 +76,7 @@ class CategoryController extends Controller
     public function show(string $id)
     {
         try{
-            $category = Category::find($id);
+            $category = Category::with('books')->find($id);
             if(!$category){
                 return response()->json([
                 'code' => 404,
