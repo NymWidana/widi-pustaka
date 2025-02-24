@@ -19,7 +19,7 @@ class CategoryResource extends JsonResource
             'name' => $this->name,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'book_ids' => $this->book_ids,
+            'books' => SimpleBookResource::collection($this->whenLoaded('books'))
         ];
     }
 }

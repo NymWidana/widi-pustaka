@@ -20,8 +20,8 @@ class BookResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'author_ids' => $this->author_ids,
-            'category_ids' => $this->category_ids,
+            'authors' => SimpleAuthorResource::collection($this->whenLoaded('authors')),
+            'category' => SimpleCategoryResource::collection($this->whenLoaded('categories'))
         ];
     }
 }
