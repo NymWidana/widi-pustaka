@@ -61,12 +61,8 @@ class BookController extends Controller
                     ], 404);
                 }
             }
-            $authorIds = [];
-            foreach ($validatedData['authors'] as $authorName) {
-                $author = Author::firstOrCreate(['name' => $authorName]);
-                $authorIds[] = $author->id;
-            }
-            $book->authors()->sync($authorIds);
+
+            $book->authors()->sync($validatedData['authors']);
             $book->categories()->sync($validatedData['categories']);
 
             if($book){
@@ -157,12 +153,8 @@ class BookController extends Controller
                     ], 404);
                 }
             }
-            $authorIds = [];
-            foreach ($validatedData['authors'] as $authorName) {
-                $author = Author::firstOrCreate(['name' => $authorName]);
-                $authorIds[] = $author->id;
-            }
-            $book->authors()->sync($authorIds);
+
+            $book->authors()->sync($validatedData['authors']);
             $book->categories()->sync($validatedData['categories']);
 
             if($updated){

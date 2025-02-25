@@ -28,16 +28,13 @@ class UpdateBookRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'string',
             'categories' => 'array',
-            'categories.*' => [
-                'integer',
-                'exists:categories,id'
-            ],
+            'categories.*' => 'integer|exists:categories,id',
             'authors' => [
                 'required',
                 'array',
                 new NotEmptyArray
             ],
-            'author.*' => 'string'
+            'authors.*' => 'integer'
         ];
     }
 
@@ -48,20 +45,16 @@ class UpdateBookRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        //makes sure intended string data is turned into array
-        //if its not string it will go to the validation rule 'array', if it isn't array it will fail
-        //if its array of non string value, it will not pass the validation rule 'string' of 'author.*'  
+        // Makes sure intended integer data is turned into array
+        // If its not integer it will go to the validation rule 'array', if it isn't array it will fail
+        // If its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
         $authors = $this->input('authors');
-        if (is_string($authors)) {
+        $categories = $this->input('categories');
+        if (is_int($authors)) {
             $this->merge([
                 'authors' => [$authors]
             ]);
         }
-        
-        //makes sure intended integer data is turned into array
-        //if its not integer it will go to the validation rule 'array', if it isn't array it will fail
-        //if its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
-        $categories = $this->input('categories');
         if (is_int($categories)) {
             $this->merge([
                 'categories' => [$categories]
@@ -113,9 +106,10 @@ class UpdateBookRequest extends FormRequest
             'title.max' => 'Book title must not exceed 255 characters.',
             'description.string' => 'Book description must be a valid string.',
             'categories.array' => 'The book categories must be an integer or an array',
-            'categories.*.integer' => 'Each book categories must be a integer.',
+            'categories.*.integer' => 'Each book categories must be an integer.',
             'categories.*.exists' => 'One or more selected book categories do not exists.',
-            'authors.required' => 'Book authors is required.'
+            'authors.required' => 'Book authors is required.',
+            'authors.*.integer' => 'Each book authors must be an integer.'
         ];
     }
 }
