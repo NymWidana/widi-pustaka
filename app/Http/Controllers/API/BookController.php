@@ -46,10 +46,17 @@ class BookController extends Controller
         //
         try{
             $validatedData = $request->validated();
-            $book = Book::create([
-                "title" => $validatedData['title'],
-                "description" => $validatedData['description']
-            ]); 
+            if($validatedData['description']){
+                $book = Book::create([
+                    "title" => $validatedData['title'],
+                    "description" => $validatedData['description']
+                ]); 
+            }else{
+                $book = Book::create([
+                    'title' => $validatedData['title'],
+                    'description' => ''
+                ]); 
+            }
 
             foreach ($validatedData['categories'] as $categoryIds) {
                 $categoryExists = Category::where('id', $categoryIds)->exists();
@@ -61,7 +68,7 @@ class BookController extends Controller
                     ], 404);
                 }
             }
-
+            
             $book->authors()->sync($validatedData['authors']);
             $book->categories()->sync($validatedData['categories']);
 
@@ -85,7 +92,6 @@ class BookController extends Controller
                 'code' => 500,
                 'success' => False,
                 'message' => 'Failed to save book data. Internal Server error! ' . $e->getMessage(),
-                'e' => $e
             ], 500);
         }
     }
@@ -139,23 +145,25 @@ class BookController extends Controller
             }
             $validatedData = $request->validated();
             $updated = $book->update([
-                "title" => $validatedData['title'],
-                "description" => $validatedData['description']
-            ]); 
-
-            foreach ($validatedData['categories'] as $categoryIds) {
-                $categoryExists = Category::where('id', $categoryIds)->exists();
-                if(!$categoryExists){
-                    return response()->json([
-                        'code' => 404,
-                        'success' => False,
-                        'message' => 'Failed to update book data!, the specified book category is not found'
-                    ], 404);
+                'title' => $validatedData['title'] ? $validatedData['title'] : $book->title,
+                'description' => $validatedData['description'] ? $validatedData['description'] : $book->description,
+            ]);     
+            if($validatedData['categories']){
+                foreach ($validatedData['categories'] as $categoryIds) {
+                    $categoryExists = Category::where('id', $categoryIds)->exists();
+                    if(!$categoryExists){
+                        return response()->json([
+                            'code' => 404,
+                            'success' => False,
+                            'message' => 'Failed to update book data!, the specified book category is not found'
+                        ], 404);
+                    }
                 }
+                $book->categories()->sync($validatedData['categories']);
             }
-
-            $book->authors()->sync($validatedData['authors']);
-            $book->categories()->sync($validatedData['categories']);
+            if($validatedData['authors']){
+                $book->authors()->sync($validatedData['authors']);
+            }
 
             if($updated){
                 return response()->json([

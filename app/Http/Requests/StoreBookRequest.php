@@ -18,34 +18,13 @@ class StoreBookRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'required|string|max:255',
-            'description' => 'string',
-            'categories' => 'array',
-            'categories.*' => 'integer|exists:categories,id',
-            'authors' => [
-                'required',
-                'array',
-                new NotEmptyArray
-            ],
-            'authors.*' => 'integer'
-        ];
-    }
-
-    /**
      * Prepare the data for validation.
      *
      * @return void
      */
     protected function prepareForValidation()
     {   
-        // Makes sure intended integer data is turned into array
+        // Integer data is turned into array
         // If its not integer it will go to the validation rule 'array', if it isn't array it will fail
         // If its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
         $authors = $this->input('authors');
@@ -60,6 +39,33 @@ class StoreBookRequest extends FormRequest
                 'categories' => [$categories]
             ]);
         }
+
+        // Set default value if not present
+        $this->merge([
+            'description' => $this->input('description', null), 
+            'categories' => $this->input('categories', [])
+        ]);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
+            'authors' => [
+                'required',
+                'array',
+                new NotEmptyArray
+            ],
+            'authors.*' => 'integer'
+        ];
     }
 
     /**
@@ -109,6 +115,7 @@ class StoreBookRequest extends FormRequest
             'categories.*.integer' => 'Each book categories must be a integer.',
             'categories.*.exists' => 'One or more selected book categories do not exists.',
             'authors.required' => 'Book authors is required.',
+            'authors.array' => 'The book authors must be an integer or an array',
             'authors.*.integer' => 'Each book authors must be an integer.'
         ];
     }

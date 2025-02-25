@@ -18,27 +18,6 @@ class UpdateBookRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
-    {
-        return [
-            'title' => 'required|string|max:255',
-            'description' => 'string',
-            'categories' => 'array',
-            'categories.*' => 'integer|exists:categories,id',
-            'authors' => [
-                'required',
-                'array',
-                new NotEmptyArray
-            ],
-            'authors.*' => 'integer'
-        ];
-    }
-
-    /**
      * Prepare the data for validation.
      *
      * @return void
@@ -60,6 +39,35 @@ class UpdateBookRequest extends FormRequest
                 'categories' => [$categories]
             ]);
         }
+
+        // Set default value if not present
+        $this->merge([
+            'title' => $this->input('title', null),
+            'description' => $this->input('description', null), 
+            'categories' => $this->input('categories', null), 
+            'authors' => $this->input('authors', null), 
+        ]);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
+            'authors' => [
+                'nullable',
+                'array',
+                new NotEmptyArray
+            ],
+            'authors.*' => 'integer'
+        ];
     }
 
     /**
@@ -101,14 +109,13 @@ class UpdateBookRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Book title is required.',
             'title.string' => 'Book title must be a valid string.',
             'title.max' => 'Book title must not exceed 255 characters.',
             'description.string' => 'Book description must be a valid string.',
             'categories.array' => 'The book categories must be an integer or an array',
             'categories.*.integer' => 'Each book categories must be an integer.',
             'categories.*.exists' => 'One or more selected book categories do not exists.',
-            'authors.required' => 'Book authors is required.',
+            'authors.array' => 'The book authors must be an integer or an array',
             'authors.*.integer' => 'Each book authors must be an integer.'
         ];
     }

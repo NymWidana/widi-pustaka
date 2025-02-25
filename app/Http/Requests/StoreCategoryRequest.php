@@ -24,10 +24,11 @@ class StoreCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string'
+            'name' => 'required|string|max:100'
         ];
     }
-        protected function failedValidation(Validator $validator)
+    
+    protected function failedValidation(Validator $validator)
     {
         if ($this->expectsJson()) {
             $errors = $validator->errors();
@@ -58,7 +59,9 @@ class StoreCategoryRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'name.required' => 'Category name is required.',
             'name.string' => 'Category name must be a valid string.',
+            'name.max' => 'Category name must not exceed 100 characters.'
         ];
     }
 

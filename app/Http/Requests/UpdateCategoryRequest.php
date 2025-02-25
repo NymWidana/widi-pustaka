@@ -17,6 +17,19 @@ class UpdateCategoryRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        // Set default value if not present
+        $this->merge([
+            'name' => $this->input('name', null)
+        ]);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
@@ -24,10 +37,11 @@ class UpdateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string'
+            'name' => 'nullable|string|max:100'
         ];
     }
-        protected function failedValidation(Validator $validator)
+
+    protected function failedValidation(Validator $validator)
     {
         if ($this->expectsJson()) {
             $errors = $validator->errors();
@@ -59,6 +73,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name.string' => 'Category name must be a valid string.',
+            'name.max' => 'Category name must not exceed 100 characters.'
         ];
     }
 

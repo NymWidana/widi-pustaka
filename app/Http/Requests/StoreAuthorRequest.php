@@ -24,10 +24,11 @@ class StoreAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string'
+            'name' => 'required|string|max:255'
         ];
     }
-        protected function failedValidation(Validator $validator)
+    
+    protected function failedValidation(Validator $validator)
     {
         if ($this->expectsJson()) {
             $errors = $validator->errors();
@@ -58,7 +59,9 @@ class StoreAuthorRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'name.required' => 'Author name is required.',
             'name.string' => 'Author name must be a valid string.',
+            'name.max' => 'Author name must not exceed 255 characters.'
         ];
     }
 

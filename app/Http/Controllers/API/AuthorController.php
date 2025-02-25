@@ -118,7 +118,7 @@ class AuthorController extends Controller
             }
             $validatedData = $request->validated();
             $updated = $author->update([
-                "name" => $validatedData['name'],
+                "name" => $validatedData['name'] ? $validatedData['name'] : $author->name
             ]); 
 
             if($updated){
@@ -161,7 +161,7 @@ class AuthorController extends Controller
             }
 
             //check if author still have books attached to it
-            if(count($author->book_ids) > 0){
+            if(count($author->books) > 0){
                 return response()->json([
                     'code' => 409,
                     'data' => $author,

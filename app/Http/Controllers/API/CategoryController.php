@@ -118,7 +118,7 @@ class CategoryController extends Controller
             }
             $validatedData = $request->validated();
             $updated = $category->update([
-                "name" => $validatedData['name'],
+                "name" => $validatedData['name'] ? $validatedData['name'] : $category->name
             ]); 
 
             if($updated){
