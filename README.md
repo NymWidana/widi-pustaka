@@ -1,66 +1,1140 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Widi Pustaka
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
+Widi Pustaka is a book management API, which provide endpoints to manage books, authors and categories. It support CRUD operations allowing clients to create, read, update and delete resources.
 
-## About Laravel
+## Table of Contents
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Allowed Http Request](#allowed-http-request)
+- [Possible Server Responses](#possible-server-responses)
+- [Attributes](#attributes)
+    - [Author Attributes](#author-attributes)
+    - [Book Attributes](#book-attributes)
+    - [Category Attributes](#category-attributes)
+- [API Endpoints](#api-endpoints)
+  - [Authors](#authors)
+    - [Get All](#authors-index)
+    - [Get by Id](#authors-show)
+    - [Create](#authors-create)
+    - [Update](#authors-update)
+    - [Delete](#authors-delete)
+  - [Books](#books)
+    - [Get All](#books-index)
+    - [Get by Id](#books-show)
+    - [Create](#books-create)
+    - [Update](#books-update)
+    - [Delete](#books-delete)
+  - [Categories](#categories)
+    - [Get All](#categories-index)
+    - [Get by Id](#categories-show)
+    - [Create](#categories-create)
+    - [Update](#categories-update)
+    - [Delete](#categories-delete)
+- [Validation](#validation)
+- [Error Handling](#error-handling)
+- [Entity Relationship Diagram](#entity-relationship-diagram)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
+To set up the Widi Pustaka book management API, follow this steps:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Clone the repository:
+```sh
+git clone https://github.com/NymWidana/widi-pustaka.git
+cd widi-pustaka
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. Install dependencies:
+```sh
+composer install
+```
 
-## Learning Laravel
+3. Copy the environment file and configure the anvironment variables:
+```sh
+cp .env.example .env
+```
+Update the `env` file with your database credentials and other necessary configuration.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. Generate an application key:
+```sh
+php artisan key:generate
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. Run the database migrations and seeder
+```sh
+php artisan migrate --seed
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+6. Start the development server:
+```sh
+php artisan serve
+```
 
-## Laravel Sponsors
+## Configuration
+Ensure that the folowing environment variables is configured in your `.env` file correctly:
+- `DB_DATABASE`
+- `DB_USERNAME`
+- `DB_PASSWORD`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Allowed Http Request
+- GET: To GET data from the API
+- POST: To send POST request to the API (Create data)
+- PUT: To send PUT request to the API (Update data)
+- DELETE: To DELETE data on the API
 
-### Premium Partners
+## Possible Server Responses
+- 200 `ok`: Request was successfull
+- 201 `created`: Request to create or update was successfull
+- 404 `not found`: Requested data was not found
+- 409 `conflict`: Request conflicts with the current state of the server
+- 500 `internal server error`: The server has encountered a situation it doesn't know how to handle
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Attributes
+### Author Attributes
+- id `BIGINT`: Uniques Identifier (Primary Key)
+- name `VARCHAR`: Author name
 
-## Contributing
+### Book Attributes
+- id `BIGINT`: Uniques Identifier (Primary Key)
+- title `VARCHAR`: Book Title
+- description `VARCHAR`: Book Description
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Category Attributes
+- id `BIGINT`: Uniques Identifier (Primary Key)
+- name `VARCHAR`: Category Name
 
-## Code of Conduct
+## API Endpoints
+### Books
+- __<h4 id="books-index">Get All Books</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/books
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/books
+    ```
 
-## Security Vulnerabilities
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": [
+            {
+                "id": 1,
+                "title": "Open-source nextgeneration application",
+                "description": "Perspiciatis sapiente rerum mollitia aut nihil accusamus dicta. Dolorum eos id tenetur repellendus.",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "authors": [
+                    {
+                        "id": 4,
+                        "name": "Darlene Labadie"
+                    },
+                    {
+                        "id": 31,
+                        "name": "Constantin Blick"
+                    }
+                ],
+                "category": [
+                    {
+                        "id": 30,
+                        "name": "Research Journals"
+                    },
+                    {
+                        "id": 32,
+                        "name": "Art & Photography"
+                    },
+                    {
+                        "id": 39,
+                        "name": "Crafts & Hobbies"
+                    },
+                    {
+                        "id": 58,
+                        "name": "Philosophy"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "title": "Centralized well-modulated internetsolution",
+                "description": "Aperiam iusto illo minima et nesciunt sint non. Harum ratione voluptas sed incidunt.",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "authors": [
+                    {
+                        "id": 32,
+                        "name": "Loyce Kutch"
+                    }
+                ],
+                "category": [
+                    {
+                        "id": 3,
+                        "name": "Science Fiction"
+                    },
+                    {
+                        "id": 61,
+                        "name": "Maps & Atlases"
+                    },
+                    {
+                        "id": 69,
+                        "name": "Sports & Recreation"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "title": "Multi-layered client-driven flexibility",
+                "description": "Corporis ut et quasi doloribus. Voluptate corporis dolores ut ut quidem.",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "authors": [
+                    {
+                        "id": 18,
+                        "name": "Franz Lind DVM"
+                    }
+                ],
+                "category": [
+                    {
+                        "id": 3,
+                        "name": "Science Fiction"
+                    },
+                    {
+                        "id": 37,
+                        "name": "Cooking & Food"
+                    },
+                    {
+                        "id": 40,
+                        "name": "Fashion & Beauty"
+                    },
+                    {
+                        "id": 52,
+                        "name": "Short Stories"
+                    }
+                ]
+            }
+        ],
+        "success": true,
+        "message": "Successfully retrieved all books data!"
+    }
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- __<h4 id="books-show">Get Book by ID</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/books/{id}
+    ```
 
-## License
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/books/1
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 1,
+            "title": "Open-source nextgeneration application",
+            "description": "Perspiciatis sapiente rerum mollitia aut nihil accusamus dicta. Dolorum eos id tenetur repellendus.",
+            "created_at": "2025-02-20T11:20:46.000000Z",
+            "updated_at": "2025-02-20T11:20:46.000000Z",
+            "authors": [
+                {
+                    "id": 31,
+                    "name": "Constantin Blick"
+                },
+                {
+                    "id": 4,
+                    "name": "Darlene Labadie"
+                }
+            ],
+            "category": [
+                {
+                    "id": 32,
+                    "name": "Art & Photography"
+                },
+                {
+                    "id": 39,
+                    "name": "Crafts & Hobbies"
+                },
+                {
+                    "id": 30,
+                    "name": "Research Journals"
+                },
+                {
+                    "id": 58,
+                    "name": "Philosophy"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully retrieved the book data!"
+    }
+    ```
+
+- __<h4 id="books-create">Create Book</h4>__
+    
+    __Endpoint__
+    ```http
+    POST /api/books
+    ```
+
+    __Request Body Format__
+    - title : `string`, required, max of 255 characters
+    - description : `string`, optional
+    - authors : `integer` or `array` of `integer`, required
+    - categories : `integer` or `array` of `integer`, optional
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/books
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "title" : "New Book",
+        "description" : "New Book Description",
+        "authors" : [1, 2],
+        "categories" : [3, 4]
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 109,
+            "title": "New Book",
+            "description": "New Book Description",
+            "created_at": "2025-02-25T11:31:37.000000Z",
+            "updated_at": "2025-02-25T11:31:37.000000Z",
+            "authors": [
+                {
+                    "id": 1,
+                    "name": "Melody Terry"
+                },
+                {
+                    "id": 2,
+                    "name": "Jayde Jacobs"
+                }
+            ],
+            "category": [
+                {
+                    "id": 3,
+                    "name": "Science Fiction"
+                },
+                {
+                    "id": 4,
+                    "name": "Fantasy"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully saved a book data!"
+    }
+    ```
+
+- __<h4 id="books-update">Update Book</h4>__
+    
+    __Endpoint__
+    ```http
+    PUT /api/books/{id}
+    ```
+
+    __Request Body Format__
+    - title : `string`, optional, max of 255 characters
+    - description : `string`, optional
+    - authors : `integer` or `array` of `integer`, optional
+    - categories : `integer` or `array` of `integer`, optional
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/books/109
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "title" : "Updated Book",
+        "description" : "Updated Book Description",
+        "authors" : [3, 4],
+        "categories" : [5, 6, 7]
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 109,
+            "title": "Updated Book",
+            "description": "Updated Book Description",
+            "created_at": "2025-02-25T11:31:37.000000Z",
+            "updated_at": "2025-02-25T11:35:27.000000Z",
+            "authors": [
+                {
+                    "id": 3,
+                    "name": "Lenora Bosco"
+                },
+                {
+                    "id": 4,
+                    "name": "Darlene Labadie"
+                }
+            ],
+            "category": [
+                {
+                    "id": 5,
+                    "name": "Romance"
+                },
+                {
+                    "id": 6,
+                    "name": "Historical Fiction"
+                },
+                {
+                    "id": 7,
+                    "name": "Thriller"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully updated a book data!"
+    }
+    ```
+
+- __<h4 id="books-delete">Delete Book</h4>__
+    
+    __Endpoint__
+    ```http
+    DELETE /api/books/{id}
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/books/101
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 109,
+            "title": "Updated Book",
+            "description": "Updated Book Description",
+            "created_at": "2025-02-25T11:31:37.000000Z",
+            "updated_at": "2025-02-25T11:35:27.000000Z",
+            "authors": [
+                {
+                    "id": 3,
+                    "name": "Lenora Bosco"
+                },
+                {
+                    "id": 4,
+                    "name": "Darlene Labadie"
+                }
+            ],
+            "category": [
+                {
+                    "id": 5,
+                    "name": "Romance"
+                },
+                {
+                    "id": 6,
+                    "name": "Historical Fiction"
+                },
+                {
+                    "id": 7,
+                    "name": "Thriller"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully deleted a book data!"
+    }
+    ```
+
+### authors
+- __<h4 id="authors-index">Get All Authors</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/authors
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/authors
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": [
+            {
+                "id": 1,
+                "name": "Melody Terry",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "books": [
+                    {
+                        "id": 38,
+                        "title": "Cross-group web-enabled securedline"
+                    },
+                    {
+                        "id": 55,
+                        "title": "Virtual tangible capability"
+                    },
+                    {
+                        "id": 90,
+                        "title": "Compatible scalable encoding"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "Jayde Jacobs",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "books": [
+                    {
+                        "id": 7,
+                        "title": "Devolved content-based toolset"
+                    },
+                    {
+                        "id": 26,
+                        "title": "Total heuristic firmware"
+                    },
+                    {
+                        "id": 27,
+                        "title": "Facetoface static matrices"
+                    },
+                    {
+                        "id": 77,
+                        "title": "Monitored high-level collaboration"
+                    },
+                    {
+                        "id": 91,
+                        "title": "Compatible multi-state openarchitecture"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "name": "Lenora Bosco",
+                "created_at": "2025-02-20T11:20:46.000000Z",
+                "updated_at": "2025-02-20T11:20:46.000000Z",
+                "books": [
+                    {
+                        "id": 22,
+                        "title": "Compatible zerodefect project"
+                    },
+                    {
+                        "id": 30,
+                        "title": "Profound global help-desk"
+                    },
+                    {
+                        "id": 50,
+                        "title": "Visionary modular installation"
+                    },
+                    {
+                        "id": 71,
+                        "title": "Robust optimizing archive"
+                    }
+                ]
+            }
+        ],
+        "success": true,
+        "message": "Successfully retrieved all authors data!"
+    }
+    ```
+
+- __<h4 id="authors-show">Get Author by ID</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/authors/{id}
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/authors/1
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 1,
+            "name": "Melody Terry",
+            "created_at": "2025-02-20T11:20:46.000000Z",
+            "updated_at": "2025-02-20T11:20:46.000000Z",
+            "books": [
+                {
+                    "id": 38,
+                    "title": "Cross-group web-enabled securedline"
+                },
+                {
+                    "id": 55,
+                    "title": "Virtual tangible capability"
+                },
+                {
+                    "id": 90,
+                    "title": "Compatible scalable encoding"
+                },
+                {
+                    "id": 105,
+                    "title": "Updated Book"
+                },
+                {
+                    "id": 106,
+                    "title": "Updated Book"
+                },
+                {
+                    "id": 107,
+                    "title": "Updated Book"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully retrieved the author data!"
+    }
+    ```
+
+- __<h4 id="authors-create">Create Author</h4>__
+    
+    __Endpoint__
+    ```http
+    POST /api/authors
+    ```
+
+    __Request Body Format
+    - name: `string`, required, max of 255 characters
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/authors
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "name" : "New Author"
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 54,
+            "name": "New Author",
+            "created_at": "2025-02-25T11:49:45.000000Z",
+            "updated_at": "2025-02-25T11:49:45.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully saved an author data!"
+    }
+    ```
+
+- __<h4 id="authors-update">Update Author</h4>__
+    
+    __Endpoint__
+    ```http
+    PUT /api/authors/{id}
+    ```
+
+    __Request Body Format
+    - name: `string`, optional, max of 255 characters
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/authors/54
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "name" : "Updated Author"
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 54,
+            "name": "Updated Author",
+            "created_at": "2025-02-25T11:49:45.000000Z",
+            "updated_at": "2025-02-25T11:50:44.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully updated an author data!"
+    }
+    ```
+
+- __<h4 id="authors-delete">Delete Author</h4>__
+    
+    __Endpoint__
+    ```http
+    DELETE /api/authors/{id}
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/authors/54
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 54,
+            "name": "Updated Author",
+            "created_at": "2025-02-25T11:49:45.000000Z",
+            "updated_at": "2025-02-25T11:50:44.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully deleted an author data!"
+    }
+    ```
+
+### Categories
+- __<h4 id="categories-index">Get All Categories</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/categories
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/categories
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": [
+            {
+                "id": 1,
+                "name": "Fiction",
+                "created_at": "2025-02-20T11:20:45.000000Z",
+                "updated_at": "2025-02-20T11:20:45.000000Z",
+                "books": [
+                    {
+                        "id": 30,
+                        "title": "Profound global help-desk"
+                    },
+                    {
+                        "id": 35,
+                        "title": "Open-architected multimedia hub"
+                    },
+                    {
+                        "id": 80,
+                        "title": "Centralized analyzing groupware"
+                    },
+                    {
+                        "id": 84,
+                        "title": "Inverse context-sensitive instructionset"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "name": "Mystery",
+                "created_at": "2025-02-20T11:20:45.000000Z",
+                "updated_at": "2025-02-20T11:20:45.000000Z",
+                "books": [
+                    {
+                        "id": 12,
+                        "title": "Extended analyzing model"
+                    },
+                    {
+                        "id": 75,
+                        "title": "Implemented 4thgeneration middleware"
+                    }
+                ]
+            },
+            {
+                "id": 3,
+                "name": "Science Fiction",
+                "created_at": "2025-02-20T11:20:45.000000Z",
+                "updated_at": "2025-02-20T11:20:45.000000Z",
+                "books": [
+                    {
+                        "id": 2,
+                        "title": "Centralized well-modulated internetsolution"
+                    },
+                    {
+                        "id": 3,
+                        "title": "Multi-layered client-driven flexibility"
+                    },
+                    {
+                        "id": 80,
+                        "title": "Centralized analyzing groupware"
+                    },
+                    {
+                        "id": 94,
+                        "title": "Multi-lateral 6thgeneration architecture"
+                    }
+                ]
+            }
+        ],
+        "success": true,
+        "message": "Successfully retrieved all categories data!"
+    }
+    ```
+
+- __<h4 id="categories-show">Get Category by ID</h4>__
+    
+    __Endpoint__
+    ```http
+    GET /api/categories/{id}
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/categories/1
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 1,
+            "name": "Fiction",
+            "created_at": "2025-02-20T11:20:45.000000Z",
+            "updated_at": "2025-02-20T11:20:45.000000Z",
+            "books": [
+                {
+                    "id": 30,
+                    "title": "Profound global help-desk"
+                },
+                {
+                    "id": 35,
+                    "title": "Open-architected multimedia hub"
+                },
+                {
+                    "id": 80,
+                    "title": "Centralized analyzing groupware"
+                },
+                {
+                    "id": 84,
+                    "title": "Inverse context-sensitive instructionset"
+                }
+            ]
+        },
+        "success": true,
+        "message": "Successfully retrieved the category data!"
+    }
+    ```
+
+- __<h4 id="categories-create">Create Category</h4>__
+    
+    __Endpoint__
+    ```http
+    POST /api/categories
+    ```
+
+    __Request Body Format
+    - name: `string`, required, max of 100 characters
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/categories
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "name" : "New Category"
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 72,
+            "name": "New Category",
+            "created_at": "2025-02-25T12:04:13.000000Z",
+            "updated_at": "2025-02-25T12:04:13.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully saved a category data!"
+    }
+    ```
+
+- __<h4 id="categories-update">Update Category</h4>__
+    
+    __Endpoint__
+    ```http
+    PUT /api/categories/{id}
+    ```
+
+    __Request Body Format
+    - name: `string`, optional, max of 100 characters
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/categories/71
+    ```
+
+    __Request Body Example__
+    ```json
+    {
+        "name" : "Updated Category"
+    }
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 201,
+        "data": {
+            "id": 72,
+            "name": "Updated Category",
+            "created_at": "2025-02-25T12:04:13.000000Z",
+            "updated_at": "2025-02-25T12:05:04.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully updated a category data!"
+    }
+    ```
+
+- __<h4 id="categories-delete">Delete Category</h4>__
+    
+    __Endpoint__
+    ```http
+    DELETE /api/categories/{id}
+    ```
+
+    __Request URL Example__
+    ```http
+    http://localhost:8000/api/categories/71
+    ```
+
+    __Response Example__
+    ```json
+    {
+        "code": 200,
+        "data": {
+            "id": 72,
+            "name": "Updated Category",
+            "created_at": "2025-02-25T12:04:13.000000Z",
+            "updated_at": "2025-02-25T12:05:04.000000Z",
+            "books": []
+        },
+        "success": true,
+        "message": "Successfully deleted a category data!"
+    }
+    ```
+
+## Validation
+Widi Pustaka uses Laravel's validation mecanism. Here are the validation preparation and rules for creating a new book:
+
+___File:___ `app/Http/Requests/StoreBookRequest.php`
+
+```php
+    protected function prepareForValidation()
+    {   
+        // Integer data is turned into array
+        // If its not integer it will go to the validation rule 'array', if it isn't array it will fail
+        // If its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
+        $authors = $this->input('authors');
+        $categories = $this->input('categories');
+        if (is_int($authors)) {
+            $this->merge([
+                'authors' => [$authors]
+            ]);
+        }
+        if (is_int($categories)) {
+            $this->merge([
+                'categories' => [$categories]
+            ]);
+        }
+        
+        // Set default value if not present
+        $this->merge([
+            'description' => $this->input('description', null), 
+            'categories' => $this->input('categories', [])
+        ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
+            'authors' => [
+                'required',
+                'array',
+                new NotEmptyArray
+            ],
+            'authors.*' => 'integer'
+        ];
+    }
+```
+And here are the validation preparation and rules for updating a book:
+
+___File:___ `app/Http/Requests/UpdateBookRequest.php`
+
+```php
+    protected function prepareForValidation()
+    {
+        // Makes sure intended integer data is turned into array
+        // If its not integer it will go to the validation rule 'array', if it isn't array it will fail
+        // If its array of non integer value, it will not pass the validation rule 'integer'  of 'category.*' 
+        $authors = $this->input('authors');
+        $categories = $this->input('categories');
+        if (is_int($authors)) {
+            $this->merge([
+                'authors' => [$authors]
+            ]);
+        }
+        if (is_int($categories)) {
+            $this->merge([
+                'categories' => [$categories]
+            ]);
+        }
+        
+        // Set default value if not present
+        $this->merge([
+            'title' => $this->input('title', null),
+            'description' => $this->input('description', null), 
+            'categories' => $this->input('categories', null), 
+            'authors' => $this->input('authors', null), 
+        ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'categories' => 'nullable|array',
+            'categories.*' => 'integer|exists:categories,id',
+            'authors' => [
+                'nullable',
+                'array',
+                new NotEmptyArray
+            ],
+            'authors.*' => 'integer'
+        ];
+    }
+```
+---
+
+The NotEmptyArray is a simple custom rule to check if the inputed array is empty
+
+___File:___ `app/Rules/NotEmptyArray.php`
+
+```php
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (is_array($value) && empty($value)) {
+            $fail('The book '.$attribute.' array must not be empty');
+        }
+    }
+```
+---
+Here we have validation rules for creating a new author:
+
+___File:___ `app/Http/Requests/StoreAuthorRequest.php`
+
+```php
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255'
+        ];
+    }
+```
+Here we have validation preparation and rules for updating an author:
+
+___File:___ `app/Http/Requests/UpdateAuthorRequest.php`
+
+```php
+    protected function prepareForValidation()
+    {
+        // Set default value if not present
+        $this->merge([
+            'name' => $this->input('name', null)
+        ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => 'nullable|string|max:255'
+        ];
+    }
+```
+---
+Here we have validation rules for creating a new category:
+
+___File:___ `app/Http/Requests/StoreCategoryRequest.php`
+
+```php
+    public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:100'
+        ];
+    }
+```
+Here we have validation preparation and rules for updating a category:
+
+___File:___ `app/Http/Requests/UpdateCategoryRequest.php`
+
+```php
+    protected function prepareForValidation()
+    {
+        // Set default value if not present
+        $this->merge([
+            'name' => $this->input('name', null)
+        ]);
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => 'nullable|string|max:100'
+        ];
+    }
+```
+
+## Error Handling
+
+| Error Code | Description   | Possible Solution |
+|---|---|---|
+| 404   | Not Found | Check if the requested resource exists    |
+| 409   | Conflict | Check if the instance targeted still has relation to other instance    |
+| 422   | Unprocessable Entity | Check the request body for anything that doesn't meet the validation requirements    |
+| 500   | Internal Server Error | Check the server log for more details on the issue    |
+
+## Entity Relationship Diagram
+![widi pustaka ERD](docs/ERD_widi_pustaka.drawio.png)
