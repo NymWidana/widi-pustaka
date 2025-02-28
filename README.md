@@ -13,18 +13,18 @@ Widi Pustaka is a book management API, which provide endpoints to manage books, 
     - [Book Attributes](#book-attributes)
     - [Category Attributes](#category-attributes)
 - [API Endpoints](#api-endpoints)
-  - [Authors](#authors)
-    - [Get All](#authors-index)
-    - [Get by Id](#authors-show)
-    - [Create](#authors-create)
-    - [Update](#authors-update)
-    - [Delete](#authors-delete)
   - [Books](#books)
     - [Get All](#books-index)
     - [Get by Id](#books-show)
     - [Create](#books-create)
     - [Update](#books-update)
     - [Delete](#books-delete)
+  - [Authors](#authors)
+    - [Get All](#authors-index)
+    - [Get by Id](#authors-show)
+    - [Create](#authors-create)
+    - [Update](#authors-update)
+    - [Delete](#authors-delete)
   - [Categories](#categories)
     - [Get All](#categories-index)
     - [Get by Id](#categories-show)
@@ -112,9 +112,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/books
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/books
+    GET http://localhost:8000/api/books
     ```
 
     __Response Example__
@@ -228,9 +228,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/books/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/books/1
+    GET http://localhost:8000/api/books/1
     ```
 
     __Response Example__
@@ -290,9 +290,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     - authors : `integer` or `array` of `integer`, required
     - categories : `integer` or `array` of `integer`, optional
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/books
+    POST http://localhost:8000/api/books
     ```
 
     __Request Body Example__
@@ -354,9 +354,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     - authors : `integer` or `array` of `integer`, optional
     - categories : `integer` or `array` of `integer`, optional
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/books/109
+    PUT http://localhost:8000/api/books/109
     ```
 
     __Request Body Example__
@@ -416,9 +416,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     DELETE /api/books/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/books/101
+    DELETE http://localhost:8000/api/books/101
     ```
 
     __Response Example__
@@ -469,9 +469,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/authors
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/authors
+    GET http://localhost:8000/api/authors
     ```
 
     __Response Example__
@@ -564,9 +564,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/authors/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/authors/1
+    GET http://localhost:8000/api/authors/1
     ```
 
     __Response Example__
@@ -620,9 +620,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     __Request Body Format
     - name: `string`, required, max of 255 characters
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/authors
+    POST http://localhost:8000/api/authors
     ```
 
     __Request Body Example__
@@ -658,9 +658,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     __Request Body Format
     - name: `string`, optional, max of 255 characters
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/authors/54
+    PUT http://localhost:8000/api/authors/54
     ```
 
     __Request Body Example__
@@ -693,9 +693,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     DELETE /api/authors/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/authors/54
+    DELETE http://localhost:8000/api/authors/54
     ```
 
     __Response Example__
@@ -722,9 +722,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/categories
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/categories
+    GET http://localhost:8000/api/categories
     ```
 
     __Response Example__
@@ -809,9 +809,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     GET /api/categories/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/categories/1
+    GET http://localhost:8000/api/categories/1
     ```
 
     __Response Example__
@@ -857,9 +857,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     __Request Body Format
     - name: `string`, required, max of 100 characters
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/categories
+    POST http://localhost:8000/api/categories
     ```
 
     __Request Body Example__
@@ -895,9 +895,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     __Request Body Format
     - name: `string`, optional, max of 100 characters
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/categories/71
+    PUT http://localhost:8000/api/categories/71
     ```
 
     __Request Body Example__
@@ -930,9 +930,9 @@ Ensure that the folowing environment variables is configured in your `.env` file
     DELETE /api/categories/{id}
     ```
 
-    __Request URL Example__
+    __Endpoint Example__
     ```http
-    http://localhost:8000/api/categories/71
+    DELETE http://localhost:8000/api/categories/71
     ```
 
     __Response Example__
